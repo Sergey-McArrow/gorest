@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Stack, Button, Paper, MenuItem } from '@mui/material'
+import { Stack, Button, Paper, Typography } from '@mui/material'
 import { FormProvider, useForm } from "react-hook-form"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -19,39 +19,48 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
         status: user.status
     }
 
-
-
-
     const methods = useForm<UserType>({ defaultValues })
     const { handleSubmit, reset, control, setValue, watch } = methods
-    const onSubmit = async (data: UserType) => {
-        const updatedUser = await updateUser({ ...data, id: user.id })
-        updatedUser ? toast.success('Data submitted successfully!') : toast.error('An error occurred')
+    const onSubmit = async (newUser: UserType) => {
+        const updatedUser = await updateUser({ ...newUser, id: user.id })
+        const { data } = updatedUser
+        if (data instanceof Array) {
+            const { field, message } = data[0]
+            toast.error(`An error occurred. 
+            Message: ${field} ${message} `)
+        }
+        else toast.success('Data sent successfully!')
     }
 
     return (
         <>
             <Paper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, minHeight: '100vh', minWidth: 1 / 1 }}>
-                <FormProvider {...methods}>
-                    <Stack
-                        component='form'
-                        direction={'column'}
-                        spacing={3}
-                        sx={{ width: 7 / 10 }}
-                        onSubmit={handleSubmit(onSubmit)}>
+                <Stack alignItems='center' spacing={3}>
 
-                        <FormInputText name='name' label="Name" />
-                        <FormInputText name='email' label="E Mail" />
-                        <FormInputDropdown name='gender' label='Gender'
-                            options={[Gender.female, Gender.male]} />
-                        <FormInputDropdown name='status' label="Status"
-                            options={[Status.inactive, Status.active]} />
 
-                        <Button type={'submit'} variant={'contained'} color={'primary'}>
-                            Submit
-                        </Button>
-                    </Stack>
-                </FormProvider>
+                    <Typography component='h1' variant='h6' align='center'>Edit user details and click <strong>SUBMIT</strong> button</Typography>
+                    <FormProvider {...methods}>
+                        <Stack
+                            component='form'
+                            direction={'column'}
+                            spacing={3}
+                            sx={{ width: 7 / 10 }}
+                            onSubmit={handleSubmit(onSubmit)}>
+                            <FormInputText name='name' label="Name" />
+                            <FormInputText name='email' label="E Mail" />
+                            <FormInputDropdown name='gender' label='Gender'
+                                options={[Gender.female, Gender.male]} />
+                            <FormInputDropdown name='status' label="Status"
+                                options={[Status.inactive, Status.active]} />
+                            <Button type='submit' variant='contained' color='primary'>
+                                Submit
+                            </Button>
+                            <Button type='reset' variant='contained' color='secondary' onClick={() => reset()}>
+                                Reset
+                            </Button>
+                        </Stack>
+                    </FormProvider>
+                </Stack>
             </Paper >
             <ToastContainer />
         </>

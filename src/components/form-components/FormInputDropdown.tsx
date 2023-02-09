@@ -21,7 +21,7 @@ export const FormInputDropdown: NextPage<FormInputProps> = ({
     }
 
     return (
-        <FormControl size={"small"} variant='filled'>
+        <FormControl size='small' variant='standard' >
             <InputLabel>{label}</InputLabel>
             <Controller
                 render={({ field: { onChange, value } }) => (
@@ -29,8 +29,8 @@ export const FormInputDropdown: NextPage<FormInputProps> = ({
                         {generateSingleOptions()}
                     </Select>
                 )}
-                control={control}
                 name={name}
+                control={control}
             />
         </FormControl>
     )

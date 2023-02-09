@@ -14,7 +14,7 @@ export const FormInputText = ({ name, label }: FormInputProps) => {
                 fieldState: { error },
             }) => (
                 <TextField
-                    variant='filled'
+                    variant='standard'
                     helperText={error ? error.message : null}
                     error={!!error}
                     onChange={onChange}

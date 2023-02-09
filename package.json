@@ -19,8 +19,8 @@
 		"eslint": "8.33.0",
 		"eslint-config-next": "13.1.6",
 		"next": "13.1.6",
-		"react": "18.2.0",
-		"react-dom": "18.2.0",
+		"react": "^18.3.0-next-594093496-20230209",
+		"react-dom": "^18.3.0-next-594093496-20230209",
 		"react-hook-form": "^7.43.1",
 		"react-toastify": "^9.1.1",
 		"typescript": "4.9.5"

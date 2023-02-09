@@ -1,11 +1,8 @@
-import { FC } from 'react'
-import { UserType } from '@/types/UserTypes'
+import { ChangeEvent, FC, ReactNode } from 'react'
+import { Gender, UserType } from '@/types/UserTypes'
 
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import Link from 'next/link'
+import { Select, TableRow, TableHead, TableCell, TableBody, MenuItem, SelectChangeEvent, Box } from '@mui/material'
 
 type UserProps = { user: UserType }
 type Column = {
@@ -15,10 +12,10 @@ type Column = {
     align?: 'right' | 'left' | 'center'
 }
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Name', minWidth: 1 / 3 },
-    { id: 'email', label: 'E Mail', minWidth: 1 / 3, },
-    { id: 'gender', label: 'Gender', minWidth: 1 / 4, align: 'left' },
-    { id: 'status', label: 'Status', minWidth: 1 / 4, align: 'right', },
+    { id: 'name', label: 'Name', minWidth: 5 / 16 },
+    { id: 'email', label: 'E Mail', minWidth: 5 / 16, },
+    { id: 'gender', label: 'Gender', minWidth: 3 / 16, align: 'left' },
+    { id: 'status', label: 'Status', minWidth: 3 / 16, align: 'right', },
 
 ]
 
@@ -26,7 +23,6 @@ export const UsersTableBody: FC<UserProps> = ({ user }) => (
     <TableBody sx={{ maxWidth: 1 / 1 }}>
         <TableRow hover role="checkbox" tabIndex={-1} >
             {columns.map((column) => {
-
                 const value = user[column.id]
                 return (
                     <TableCell key={column.id} align={column.align} style={{ width: column.minWidth }} >
@@ -39,19 +35,44 @@ export const UsersTableBody: FC<UserProps> = ({ user }) => (
         </TableRow>
     </TableBody>
 )
+interface TableHeaderProps extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
+    handleGenderChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 
-export const TableHeader = () => (
-    <TableHead>
+}export const TableHeader: FC<TableHeaderProps> = ({ handleGenderChange }) => (
+    <TableHead sx={{ maxWidth: 1 / 1 }}>
         <TableRow>
-            {columns.map((column) => (
-                <TableCell
-                    key={column.id}
-                    align={column.align}
-                    sx={{ width: column.minWidth }}
-                >
-                    {column.label}
-                </TableCell>
-            ))}
+            {columns.map((column) => {
+                if (column.id === 'gender') return (
+                    <TableCell
+                        key={column.id}
+                        align={column.align}
+                        sx={{ width: column.minWidth }}                    >
+                        <Select
+                            label='Gender'
+                            defaultValue='Gender'
+                            inputProps={{ 'aria-label': 'Without label' }}
+                            onChange={handleGenderChange}
+                            fullWidth
+                        >
+                            <MenuItem value={Gender.female}> {Gender.female} </MenuItem>
+                            <MenuItem value={Gender.male}> {Gender.male}  </MenuItem>
+                            <MenuItem hidden value="Gender">
+                                <em>Gender(ALL)</em>
+                            </MenuItem>
+                        </Select>
+                    </TableCell>
+                )
+                else return (
+                    <TableCell
+                        key={column.id}
+                        align={column.align}
+                        sx={{ width: column.minWidth }}
+                    >
+                        {column.label}
+                    </TableCell>
+                )
+            }
+            )}
         </TableRow>
     </TableHead>
 )

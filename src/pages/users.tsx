@@ -1,22 +1,20 @@
 import { TableHeader, UsersTableBody } from '@/components/UserTable'
 import { PaginationType, UserType } from '@/types/UserTypes'
-import { ChangeEvent, FC, useState } from 'react'
+import { ChangeEvent, ReactNode, use, useState } from 'react'
 
 import { getUsersDataFromAPI } from '@/utils/api'
 
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableContainer from '@mui/material/TableContainer'
-import TablePagination from '@mui/material/TablePagination'
+import { Paper, Pagination, Table, TableContainer, Stack, SelectChangeEvent } from '@mui/material/'
 
-import next, { NextPage } from 'next'
+import { NextPage } from 'next'
 import { GetStaticProps } from 'next'
+import { ToggleButtonThreeEl } from '@/components/form-components/ToggleButton'
 
-type UsersProps = { users: UserType[] | null, pagination: PaginationType | null }
+type UsersProps = { usersData: UserType[] | null, pagination: PaginationType | null }
 
 export const getStaticProps = async () => {
     try {
-        const users = await getUsersDataFromAPI()
+        const users = await (getUsersDataFromAPI())
         if (!users) {
             return {
                 notFound: true,
@@ -25,46 +23,54 @@ export const getStaticProps = async () => {
 
         return {
             props: {
-                users: users?.data,
+                usersData: users?.data,
                 pagination: users?.meta?.pagination
             },
         }
     } catch {
         return {
-            props: { users: null },
+            props: { usersData: null },
         }
     }
 }
 
+const Users: NextPage<UsersProps> = ({ usersData, pagination }) => {
+    const [users, setUsers] = useState(usersData)
+    const [page, setPage] = useState(1)
 
-const Users: NextPage<UsersProps> = ({ users, pagination }) => {
-    const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
-    // const nextLink = pagination?.links.next
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-        // console.log(newPage)
+    const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
+        console.log(newPage)
         setPage(newPage)
+    }
+
+    const handleGenderChange = async (event: SelectChangeEvent<string>, child: ReactNode) => {
+        const { value } = event.target as HTMLInputElement
+
+        if (value === 'Gender') {
+            setUsers(usersData)
+        } else {
+            const { data } = await (getUsersDataFromAPI(page))
+            const filteredUsers = data?.filter(user => user.gender === value) || users
+            setUsers(filteredUsers)
+        }
+
     }
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer >
                 <Table stickyHeader aria-label="sticky table">
-                    <TableHeader />
+                    <TableHeader handleGenderChange={handleGenderChange} />
                     {users ?
                         users.map((user) =>
                             <UsersTableBody key={user.id} user={user} />)
                         : null}
                 </Table >
             </TableContainer >
-            <TablePagination
-                component="div"
-                count={pagination?.pages || 1}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-            />
+            <Stack direction="row" justifyContent="space-around" alignItems="center"            >
+                <Pagination count={pagination?.pages || 10} page={page} onChange={handleChangePage} />
+                <ToggleButtonThreeEl setUsers={setUsers} users={users} />
+            </Stack>
         </Paper >
     )
 }

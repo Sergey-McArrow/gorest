@@ -1,10 +1,13 @@
 import { getUserFromAPI, getUsersDataFromAPI } from '@/utils/api'
-import { GetServerSideProps, NextPage } from 'next'
+import { GetServerSideProps, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
 import { UserType } from '@/types/UserTypes'
 import UserInfo from '@/components/UserInfo'
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { id } = context?.params
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext<NextParsedUrlQuery>) => {
+    const id = context.params?.id as string
+    console.log(context.params)
+
     const { data } = await getUserFromAPI(id)
 
     if (!data) {
@@ -16,22 +19,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: { user: data },
     }
 }
-// export const getStaticProps: GetStaticProps = async (context) => {
-//     const id = context.params
-//     console.log(context)
 
-//     const data = await getUserFromAPI(id)
+export const getStaticPaths = async () => {
+    const { data } = await getUsersDataFromAPI()
+    if (!data) {
+        return {
+            notFound: true,
+        }
+    }
+    const paths = data.map(({ id }) => ({
+        params: { id: id.toString() }
+    }))
 
-//     if (!data) {
-//         return {
-//             notFound: true,
-//         }
-//     }
+    return {
+        paths,
+        fallback: false,
+    }
+}
 
-//     return {
-//         props: { user: data },
-//     }
-// }
 
 type UserTypeProps = { user: UserType }
 

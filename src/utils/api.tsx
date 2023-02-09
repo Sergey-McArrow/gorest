@@ -27,7 +27,6 @@ export const getUserFromAPI = async (id: string) => {
 
 export const updateUser = async (updatedData: UserType) => {
     const API_KEY = process.env.API_TOKEN || '467f495bc0990c67185f0fb496167f7600fe2217bb89c75fdc8e9e9fa1071ae5'
-    console.log(process.env)
     try {
         const response = await fetch('https://gorest.co.in/public/v1/users/' + updatedData.id, {
             method: 'PUT',
@@ -37,8 +36,9 @@ export const updateUser = async (updatedData: UserType) => {
             },
             body: JSON.stringify(updatedData)
         })
-        if (response.status === 200) return response.json()
+        return response.json()
+
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
