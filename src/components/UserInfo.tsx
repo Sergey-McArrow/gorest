@@ -1,4 +1,6 @@
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+
 import { Stack, Button, Paper, Typography } from '@mui/material'
 import { FormProvider, useForm } from "react-hook-form"
 import { ToastContainer, toast } from 'react-toastify'
@@ -18,6 +20,7 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
         gender: user.gender,
         status: user.status
     }
+    const router = useRouter()
 
     const methods = useForm<UserType>({ defaultValues })
     const { handleSubmit, reset, control, setValue, watch } = methods
@@ -35,7 +38,7 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
     return (
         <>
             <Paper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, minHeight: '100vh', minWidth: 1 / 1 }}>
-                <Stack alignItems='center' spacing={3}>
+                <Stack alignItems='center' spacing={3} sx={{ width: 7 / 10 }}>
 
 
                     <Typography component='h1' variant='h6' align='center'>Edit user details and click <strong>SUBMIT</strong> button</Typography>
@@ -44,7 +47,7 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
                             component='form'
                             direction={'column'}
                             spacing={3}
-                            sx={{ width: 7 / 10 }}
+
                             onSubmit={handleSubmit(onSubmit)}>
                             <FormInputText name='name' label="Name" />
                             <FormInputText name='email' label="E Mail" />
@@ -57,6 +60,9 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
                             </Button>
                             <Button type='reset' variant='contained' color='secondary' onClick={() => reset()}>
                                 Reset
+                            </Button>
+                            <Button type='reset' variant='contained' color='info' onClick={() => router.back()}>
+                                Go Back
                             </Button>
                         </Stack>
                     </FormProvider>

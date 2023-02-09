@@ -6,40 +6,39 @@ import { getUsersDataFromAPI } from '@/utils/api'
 
 import { Paper, Pagination, Table, TableContainer, Stack, SelectChangeEvent } from '@mui/material/'
 
-import { NextPage } from 'next'
-import { GetStaticProps } from 'next'
+import { GetStaticPropsContext, NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { ToggleButtonThreeEl } from '@/components/form-components/ToggleButton'
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 
 type UsersProps = { usersData: UserType[] | null, pagination: PaginationType | null }
 
-export const getStaticProps = async () => {
-    try {
-        const users = await (getUsersDataFromAPI())
-        if (!users) {
-            return {
-                notFound: true,
-            }
+export const getServerSideProps = async (context: GetStaticPropsContext<NextParsedUrlQuery>) => {
+    const page = context.params?.id as string
+    const users = await (getUsersDataFromAPI(page))
+    if (!users) {
+        return {
+            notFound: true,
         }
+    }
 
-        return {
-            props: {
-                usersData: users?.data,
-                pagination: users?.meta?.pagination
-            },
-        }
-    } catch {
-        return {
-            props: { usersData: null },
-        }
+    return {
+        props: {
+            usersData: users?.data,
+            pagination: users?.meta?.pagination
+        },
+
     }
 }
 
 const Users: NextPage<UsersProps> = ({ usersData, pagination }) => {
+    const router = useRouter()
+
     const [users, setUsers] = useState(usersData)
     const [page, setPage] = useState(1)
 
     const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
-        console.log(newPage)
+        router.push(newPage.toString())
         setPage(newPage)
     }
 
@@ -49,15 +48,14 @@ const Users: NextPage<UsersProps> = ({ usersData, pagination }) => {
         if (value === 'Gender') {
             setUsers(usersData)
         } else {
-            const { data } = await (getUsersDataFromAPI(page))
+            const { data } = await (getUsersDataFromAPI(page.toString()))
             const filteredUsers = data?.filter(user => user.gender === value) || users
             setUsers(filteredUsers)
         }
-
     }
 
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ width: '90%', overflow: 'hidden', mx: 'auto' }}>
             <TableContainer >
                 <Table stickyHeader aria-label="sticky table">
                     <TableHeader handleGenderChange={handleGenderChange} />
@@ -69,7 +67,6 @@ const Users: NextPage<UsersProps> = ({ usersData, pagination }) => {
             </TableContainer >
             <Stack direction="row" justifyContent="space-around" alignItems="center"            >
                 <Pagination count={pagination?.pages || 10} page={page} onChange={handleChangePage} />
-                <ToggleButtonThreeEl setUsers={setUsers} users={users} />
             </Stack>
         </Paper >
     )

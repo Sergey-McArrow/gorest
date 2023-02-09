@@ -6,7 +6,6 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 
 export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext<NextParsedUrlQuery>) => {
     const id = context.params?.id as string
-    console.log(context.params)
 
     const { data } = await getUserFromAPI(id)
 
@@ -36,7 +35,6 @@ export const getStaticPaths = async () => {
         fallback: false,
     }
 }
-
 
 type UserTypeProps = { user: UserType }
 

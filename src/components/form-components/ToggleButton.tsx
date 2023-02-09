@@ -19,7 +19,6 @@ export const ToggleButtonThreeEl: NextPage<ToggleButtonThreeElProps> = ({ setUse
         if (users) {
             const filteredUsers = users.filter(user => user.gender === newAlignment)
             setUsers(filteredUsers)
-            // console.log(newAlignment, filteredUsers)
             setAlignment(newAlignment)
         }
     }

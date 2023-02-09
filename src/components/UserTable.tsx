@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, ReactNode } from 'react'
+import { ChangeEvent, FC, HTMLAttributes, ReactNode } from 'react'
 import { Gender, UserType } from '@/types/UserTypes'
 
 import Link from 'next/link'
@@ -14,7 +14,7 @@ type Column = {
 const columns: readonly Column[] = [
     { id: 'name', label: 'Name', minWidth: 5 / 16 },
     { id: 'email', label: 'E Mail', minWidth: 5 / 16, },
-    { id: 'gender', label: 'Gender', minWidth: 3 / 16, align: 'left' },
+    { id: 'gender', label: 'Gender', minWidth: 3 / 16, align: 'center' },
     { id: 'status', label: 'Status', minWidth: 3 / 16, align: 'right', },
 
 ]
@@ -24,18 +24,24 @@ export const UsersTableBody: FC<UserProps> = ({ user }) => (
         <TableRow hover role="checkbox" tabIndex={-1} >
             {columns.map((column) => {
                 const value = user[column.id]
-                return (
+                if (column.id === 'name')
+                    return (
+                        <TableCell key={column.id} align={column.align} style={{ width: column.minWidth }} >
+                            <Link href={`/edit/${user.id}`}>
+                                {value}
+                            </Link>
+                        </TableCell>
+                    )
+                else return (
                     <TableCell key={column.id} align={column.align} style={{ width: column.minWidth }} >
-                        <Link href={`/edit/${user.id}`}>
-                            {value}
-                        </Link>
+                        {value}
                     </TableCell>
                 )
             })}
         </TableRow>
     </TableBody>
 )
-interface TableHeaderProps extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
+interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
     handleGenderChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 
 }export const TableHeader: FC<TableHeaderProps> = ({ handleGenderChange }) => (
@@ -46,9 +52,9 @@ interface TableHeaderProps extends React.HTMLAttributes<HTMLTableHeaderCellEleme
                     <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ width: column.minWidth }}                    >
+                        sx={{ width: 1 / 1 }}
+                    >
                         <Select
-                            label='Gender'
                             defaultValue='Gender'
                             inputProps={{ 'aria-label': 'Without label' }}
                             onChange={handleGenderChange}

@@ -3,14 +3,13 @@ import { getUsersDataFromAPIFnType, UserType } from '@/types/UserTypes'
 export const apiUri: string = 'https://gorest.co.in/public/v1/users?page='
 
 
-export const getUsersDataFromAPI: getUsersDataFromAPIFnType = async (page = 1) => {
+export const getUsersDataFromAPI: getUsersDataFromAPIFnType = async (page = '1') => {
     try {
         const response = await fetch('https://gorest.co.in/public/v1/users?page=' + page) //
         const users = await response.json()
         return users
-
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -19,9 +18,8 @@ export const getUserFromAPI = async (id: string) => {
         const response = await fetch('https://gorest.co.in/public/v1/users/' + id)
         const user = await response.json()
         return user
-
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 

@@ -35,5 +35,5 @@ export type MetaType = {
 }
 
 export type getUsersDataFromAPIFnType = (
-	page?: number,
+	page?: string,
 ) => Promise<{ data: UserType[] | null; meta: MetaType }>
