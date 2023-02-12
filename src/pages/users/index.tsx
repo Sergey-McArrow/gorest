@@ -1,41 +1,39 @@
 import { TableHeader, UsersTableBody } from '@/components/UserTable'
 import { PaginationType, UserType } from '@/types/UserTypes'
-import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import { ChangeEvent, ReactNode, useState } from 'react'
 
-import { getinitialUsersDataFromAPI } from '@/utils/api'
+import { getinitialUsersDataFromAPI, getAllUsersInfoFromApi } from '@/utils/api'
 
 import { Paper, Pagination, Table, TableContainer, Stack, SelectChangeEvent } from '@mui/material/'
 
-import { GetServerSidePropsContext, NextPage } from 'next'
+import { GetServerSidePropsContext, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 
 type UsersProps = { initialUsersData: UserType[] | null, pagination: PaginationType | null }
 
-export const getServerSideProps = async (context: GetServerSidePropsContext<NextParsedUrlQuery>) => {
-    const page = context.params?.page as string
-    console.log(page)
-    const users = await (getinitialUsersDataFromAPI(page))
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext<NextParsedUrlQuery>) => {
+    const id = context.params?.id as string
+
+    const users = await getAllUsersInfoFromApi()
     if (!users) {
         return {
             notFound: true,
         }
     }
-
     return {
         props: {
             initialUsersData: users?.data,
             pagination: users?.meta?.pagination
         },
-
     }
 }
 
 const Users: NextPage<UsersProps> = ({ initialUsersData, pagination }) => {
     const router = useRouter()
     const page = pagination?.page
-    const [users, setUsers] = useState<UserType[] | null>(initialUsersData)
-    console.log(users)
+    // const [users, setUsers] = useState(initialUsersData)
+    console.log(initialUsersData)
 
     const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
         console.log(newPage)
@@ -53,21 +51,22 @@ const Users: NextPage<UsersProps> = ({ initialUsersData, pagination }) => {
         //     setUsers(filteredUsers)
         // }
     }
-    useEffect(() => { setUsers(initialUsersData) }, [])
+
     return (
-        <TableContainer component={Paper} sx={{ width: '90%', overflow: 'hidden', mx: 'auto' }} >
-            <Table stickyHeader aria-label="sticky table" sx={{ padding: '1rem' }}>
-                <TableHeader handleGenderChange={handleGenderChange} />
-                {users ?
-                    users.map((user) =>
-                        <UsersTableBody key={user.id} user={user} />)
-                    : null}
-            </Table >
+        <Paper sx={{ width: '90%', overflow: 'hidden', mx: 'auto' }}>
+            <TableContainer >
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHeader handleGenderChange={handleGenderChange} />
+                    {initialUsersData ?
+                        initialUsersData.map((user) =>
+                            <UsersTableBody key={user.id} user={user} />)
+                        : null}
+                </Table >
+            </TableContainer >
             <Stack direction="row" justifyContent="space-around" alignItems="center" sx={{ padding: '1rem' }} >
                 <Pagination count={pagination?.pages || 10} page={page} onChange={handleChangePage} />
             </Stack>
-        </TableContainer >
-
+        </Paper >
     )
 }
 

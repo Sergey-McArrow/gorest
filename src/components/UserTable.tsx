@@ -8,14 +8,14 @@ type UserProps = { user: UserType }
 type Column = {
     id: 'name' | 'email' | 'gender' | 'status'
     label: string
-    minWidth?: number
+    minWidth?: number | string
     align?: 'right' | 'left' | 'center'
 }
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Name', minWidth: 5 / 16 },
-    { id: 'email', label: 'E Mail', minWidth: 5 / 16, },
-    { id: 'gender', label: 'Gender', minWidth: 3 / 16, align: 'center' },
-    { id: 'status', label: 'Status', minWidth: 3 / 16, align: 'right', },
+    { id: 'name', label: 'Name', minWidth: '30%' },
+    { id: 'email', label: 'E Mail', minWidth: '30%', },
+    { id: 'gender', label: 'Gender', minWidth: '20%', align: 'right' },
+    { id: 'status', label: 'Status', minWidth: '20%', align: 'right', },
 
 ]
 
@@ -26,14 +26,14 @@ export const UsersTableBody: FC<UserProps> = ({ user }) => (
                 const value = user[column.id]
                 if (column.id === 'name')
                     return (
-                        <TableCell key={column.id} align={column.align} style={{ width: column.minWidth }} >
+                        <TableCell key={column.id} align={column.align} style={{ width: column.minWidth, maxWidth: '100%' }} >
                             <Link href={`/edit/${user.id}`}>
                                 {value}
                             </Link>
                         </TableCell>
                     )
                 else return (
-                    <TableCell key={column.id} align={column.align} style={{ width: column.minWidth }} >
+                    <TableCell key={column.id} align={column.align} style={{ width: column.minWidth, maxWidth: '100%' }} >
                         {value}
                     </TableCell>
                 )
@@ -45,20 +45,21 @@ interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
     handleGenderChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 
 }export const TableHeader: FC<TableHeaderProps> = ({ handleGenderChange }) => (
-    <TableHead sx={{ maxWidth: 1 / 1 }}>
+    <TableHead sx={{ maxWidth: '100%' }}>
         <TableRow>
             {columns.map((column) => {
                 if (column.id === 'gender') return (
                     <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ width: 1 / 1 }}
+                        sx={{ maxWidth: 1 / 1, padding: '0!important' }}
                     >
                         <Select
                             defaultValue='Gender'
-                            inputProps={{ 'aria-label': 'Without label' }}
+                            inputProps={{ MenuProps: { disableScrollLock: true } }}
                             onChange={handleGenderChange}
-                            fullWidth
+                            sx={{ maxWidth: '100%', border: 'none' }}
+                            variant='standard'
                         >
                             <MenuItem value={Gender.female}> {Gender.female} </MenuItem>
                             <MenuItem value={Gender.male}> {Gender.male}  </MenuItem>
@@ -72,7 +73,7 @@ interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
                     <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ width: column.minWidth }}
+                        sx={{ width: column.minWidth, maxWidth: column.minWidth }}
                     >
                         {column.label}
                     </TableCell>

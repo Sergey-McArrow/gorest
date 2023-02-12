@@ -1,9 +1,19 @@
-import { getUsersDataFromAPIFnType, UserType } from '@/types/UserTypes'
+import { getinitialUsersDataFromAPIFnType, UserType } from '@/types/UserTypes'
 
 export const apiUri: string = 'https://gorest.co.in/public/v1/users?page='
 
+export const getAllUsersInfoFromApi = async () => {
+    try {
+        const response = await fetch('https://gorest.co.in/public/v1/users')
+        const users = await response.json()
+        console.log(users)
 
-export const getUsersDataFromAPI: getUsersDataFromAPIFnType = async (page = '1') => {
+        return users
+    } catch (err) {
+        console.error(err)
+    }
+}
+export const getinitialUsersDataFromAPI: getinitialUsersDataFromAPIFnType = async (page) => {
     try {
         const response = await fetch('https://gorest.co.in/public/v1/users?page=' + page) //
         const users = await response.json()

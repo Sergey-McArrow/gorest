@@ -25,7 +25,6 @@ export type PaginationType = {
 	limit: number
 	links: LinksType
 	page: number
-
 	pages: number
 	total: number
 }
@@ -34,6 +33,11 @@ export type MetaType = {
 	pagination: PaginationType
 }
 
-export type getUsersDataFromAPIFnType = (
+export type getinitialUsersDataFromAPIFnType = (
 	page?: string,
 ) => Promise<{ data: UserType[] | null; meta: MetaType }>
+
+export type getAllUsersInfoFromApiFnType = () => Promise<{
+	data: UserType[] | null
+	meta: MetaType
+}>

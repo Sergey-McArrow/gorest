@@ -1,4 +1,4 @@
-import { getUserFromAPI, getUsersDataFromAPI } from '@/utils/api'
+import { getinitialUsersDataFromAPI, getUserFromAPI } from '@/utils/api'
 import { GetServerSideProps, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
 import { UserType } from '@/types/UserTypes'
 import UserInfo from '@/components/UserInfo'
@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps = async (context: GetStaticPropsCont
 }
 
 export const getStaticPaths = async () => {
-    const { data } = await getUsersDataFromAPI()
+    const { data } = await getinitialUsersDataFromAPI()
     if (!data) {
         return {
             notFound: true,
