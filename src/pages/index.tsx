@@ -15,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
-        <Typography variant='h4' component='h1' textAlign='center' color='ThreeDLightShadow'>Here is the api for get & edit users data from FakeApi </Typography>
+        <Typography variant='h4' component='h1' textAlign='center' color='ThreeDLightShadow'>Here is the apз for get & edit users data from FakeApi </Typography>
         <Button variant='contained' color='info' onClick={() => router.push('/users/1')}>
           Go to Users
         </Button>
