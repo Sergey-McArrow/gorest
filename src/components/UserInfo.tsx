@@ -27,10 +27,18 @@ const UserInfo: FC<UserInfoProps> = ({ user }) => {
     const onSubmit = async (newUser: UserType) => {
         const updatedUser = await updateUser({ ...newUser, id: user.id })
         const { data } = updatedUser
-        if (data instanceof Array || data.message) {
+
+
+
+        if (data instanceof Array) { //TODO: data has property message
             const { field, message } = data[0]
             toast.error(`An error occurred. 
             Message: ${field} ${message} `)
+        }
+        else if ('message' in data) {
+            const { message } = data
+            toast.error(`An error occurred. 
+            Message:  ${message} `)
         }
         else {
             toast.success('Data sent successfully!')
