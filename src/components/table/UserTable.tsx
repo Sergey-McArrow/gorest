@@ -1,5 +1,6 @@
-import { FC, HTMLAttributes, ReactNode } from 'react'
+import { HTMLAttributes, ReactNode } from 'react'
 import { Gender, UserType } from '@/types/UserTypes'
+import type { FC } from 'react'
 
 import Link from 'next/link'
 import { MenuItem, Select, SelectChangeEvent, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
@@ -12,7 +13,6 @@ const columns: readonly Column[] = [
     { id: 'email', label: 'E Mail', minWidth: '30%', },
     { id: 'gender', label: 'Gender', minWidth: '20%', align: 'right' },
     { id: 'status', label: 'Status', minWidth: '20%', align: 'right', },
-
 ]
 
 export const UsersTableBody: FC<UserProps> = ({ user }) => (

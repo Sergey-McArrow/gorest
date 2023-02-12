@@ -4,7 +4,7 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 import { useRouter } from 'next/router'
 import { Pagination, Paper, SelectChangeEvent, Stack, Table, TableContainer } from '@mui/material/'
 
-import { TableHeader, UsersTableBody } from '@/components/UserTable'
+import { TableHeader, UsersTableBody } from '@/components/table/UserTable'
 import { GenderSelectType, PaginationType, UserType } from '@/types/UserTypes'
 import { getAllUsersInfoFromApi } from '@/utils/api'
 

@@ -1,21 +1,23 @@
 import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
-import Link from 'next/link'
-import { Button } from '@mui/material'
+// import styles from '@/styles/Home.module.css'
+import { Button, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 
 
 export default function Home() {
+  const router = useRouter()
   return (
     <>
       <Head>
         <title>GoRest</title>
-        <meta name="description" content="Fetching data forkm gorestA" />
+        <meta name="description" content="Fetching data from gorestAPI" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <Button variant='contained' color='info'>
-          <Link href='./users/1'>Go to Users</Link>
+      <main >
+        <Typography variant='h4' component='h1' textAlign='center' color='ThreeDLightShadow'>Here is the api for get & edit users data from FakeApi </Typography>
+        <Button variant='contained' color='info' onClick={() => router.push('/users/1')}>
+          Go to Users
         </Button>
       </main>
     </>

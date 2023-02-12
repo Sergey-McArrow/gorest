@@ -4,7 +4,7 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta'
 import { useRouter } from 'next/router'
 import { Pagination, Paper, SelectChangeEvent, Stack, Table, TableContainer } from '@mui/material/'
 
-import { TableHeader, UsersTableBody } from '@/components/UserTable'
+import { TableHeader, UsersTableBody } from '@/components/table/UserTable'
 import { GenderSelectType, PaginationType, UserType } from '@/types/UserTypes'
 import { getinitialUsersDataFromAPI } from '@/utils/api'
 
@@ -27,7 +27,6 @@ const Users: NextPage<UsersProps> = ({ initialUsersData, pagination }) => {
     const [gender, setGender] = useState<GenderSelectType>('all')
 
     const handleChangePage = useCallback((event: ChangeEvent<unknown>, newPage: number) => {
-
         router.push(String(newPage))
             .then(() => { setGender('all') })
     }, [])

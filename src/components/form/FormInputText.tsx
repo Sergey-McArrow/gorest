@@ -1,9 +1,9 @@
-import React from "react"
+import type { FC } from 'react'
 import { Controller, useFormContext } from "react-hook-form"
 import { FormInputProps } from '@/types/FormInputProps'
-import TextField from '@mui/material/TextField'
+import { TextField } from '@mui/material'
 
-export const FormInputText = ({ name, label }: FormInputProps) => {
+export const FormInputText: FC<FormInputProps> = ({ name, label }) => {
     const { control } = useFormContext()
     return (
         <Controller

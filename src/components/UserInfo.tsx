@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import type { FC } from 'react'
 import { useRouter } from 'next/router'
 
 import { Stack, Button, Paper, Typography } from '@mui/material'
@@ -7,13 +7,13 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 
 import { Gender, Status, UserType } from '@/types/UserTypes'
-import { FormInputText } from '@/components/form-components/FormInputText'
-import { FormInputDropdown } from '@/components/form-components/FormInputDropdown'
+import { FormInputText } from '@/components/form/FormInputText'
+import { FormInputDropdown } from '@/components/form/FormInputDropdown'
 import { updateUser } from '@/utils/api'
 
 type UserInfoProps = { user: UserType }
 
-const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
+const UserInfo: FC<UserInfoProps> = ({ user }) => {
     const defaultValues = {
         name: user.name,
         email: user.email,
@@ -25,9 +25,9 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
     const methods = useForm<UserType>({ defaultValues })
     const { handleSubmit, reset, control, setValue, watch } = methods
     const onSubmit = async (newUser: UserType) => {
-        const updatedUser = await updateUser({ ...newUser, id: user.id }, process.env.API_TOKEN || '')
+        const updatedUser = await updateUser({ ...newUser, id: user.id })
         const { data } = updatedUser
-        if (data instanceof Array) {
+        if (data instanceof Array || data.message) {
             const { field, message } = data[0]
             toast.error(`An error occurred. 
             Message: ${field} ${message} `)
@@ -40,15 +40,14 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
 
     return (
         <>
-            <Paper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, minHeight: '100vh', minWidth: 1 / 1 }}>
+            <Paper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, minHeight: '100vh' }}>
                 <Stack alignItems='center' spacing={3} sx={{ width: '70%' }}>
-                    <Typography component='h1' variant='h6' align='center'>Edit user details and click <strong>SUBMIT</strong> button</Typography>
+                    <Typography component='h1' variant='h6' align='center'>Edit user details</Typography>
                     <FormProvider {...methods}>
-                        <Stack
+                        <Stack sx={{ width: '70%' }}
                             component='form'
                             direction={'column'}
                             spacing={3}
-
                             onSubmit={handleSubmit(onSubmit)}>
                             <FormInputText name='name' label="Name" />
                             <FormInputText name='email' label="E Mail" />
@@ -56,15 +55,14 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
                                 options={[Gender.female, Gender.male]} />
                             <FormInputDropdown name='status' label="Status"
                                 options={[Status.inactive, Status.active]} />
-                            <Button type='submit' variant='contained' color='primary'>
-                                Submit
-                            </Button>
-                            <Button type='reset' variant='contained' color='secondary' onClick={() => reset()}>
-                                Reset
-                            </Button>
-                            <Button variant='contained' color='info' onClick={() => router.back()}>
-                                Go Back
-                            </Button>
+                            <Stack spacing={3} direction='row-reverse' justifyContent='flex-end' >
+                                <Button type='submit' variant='contained' color='success'>
+                                    Submit
+                                </Button>
+                                <Button variant='outlined' color='inherit' onClick={() => router.back()}>
+                                    Go Back
+                                </Button>
+                            </Stack>
                         </Stack>
                     </FormProvider>
                 </Stack>

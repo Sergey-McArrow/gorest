@@ -1,10 +1,9 @@
+import type { FC } from 'react'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useFormContext, Controller } from "react-hook-form"
 import { FormInputProps } from '@/types/FormInputProps'
-import { NextPage } from 'next'
 
-
-export const FormInputDropdown: NextPage<FormInputProps> = ({
+export const FormInputDropdown: FC<FormInputProps> = ({
     name,
     label,
     options
