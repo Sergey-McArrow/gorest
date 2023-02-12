@@ -30,7 +30,7 @@ const UserInfo: FC<UserInfoProps> = ({ user }) => {
 
 
 
-        if (data instanceof Array) { //TODO: data has property message
+        if (data instanceof Array) {
             const { field, message } = data[0]
             toast.error(`An error occurred. 
             Message: ${field} ${message} `)
