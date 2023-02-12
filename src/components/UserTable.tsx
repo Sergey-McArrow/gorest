@@ -1,16 +1,12 @@
-import { ChangeEvent, FC, HTMLAttributes, ReactNode } from 'react'
+import { FC, HTMLAttributes, ReactNode } from 'react'
 import { Gender, UserType } from '@/types/UserTypes'
 
 import Link from 'next/link'
-import { Select, TableRow, TableHead, TableCell, TableBody, MenuItem, SelectChangeEvent, Box } from '@mui/material'
+import { MenuItem, Select, SelectChangeEvent, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+import { Column } from '@/types/TableProps'
 
 type UserProps = { user: UserType }
-type Column = {
-    id: 'name' | 'email' | 'gender' | 'status'
-    label: string
-    minWidth?: number | string
-    align?: 'right' | 'left' | 'center'
-}
+
 const columns: readonly Column[] = [
     { id: 'name', label: 'Name', minWidth: '30%' },
     { id: 'email', label: 'E Mail', minWidth: '30%', },
@@ -20,20 +16,21 @@ const columns: readonly Column[] = [
 ]
 
 export const UsersTableBody: FC<UserProps> = ({ user }) => (
-    <TableBody sx={{ maxWidth: 1 / 1 }}>
-        <TableRow hover role="checkbox" tabIndex={-1} >
+    <TableBody sx={{ maxWidth: '100%' }}>
+        <TableRow hover role="checkbox" tabIndex={-1}>
             {columns.map((column) => {
                 const value = user[column.id]
                 if (column.id === 'name')
                     return (
-                        <TableCell key={column.id} align={column.align} style={{ width: column.minWidth, maxWidth: '100%' }} >
+                        <TableCell key={column.id} align={column.align}
+                            style={{ width: column.minWidth, maxWidth: '100%' }}>
                             <Link href={`/edit/${user.id}`}>
                                 {value}
                             </Link>
                         </TableCell>
                     )
                 else return (
-                    <TableCell key={column.id} align={column.align} style={{ width: column.minWidth, maxWidth: '100%' }} >
+                    <TableCell key={column.id} align={column.align} style={{ width: column.minWidth, maxWidth: '100%' }}>
                         {value}
                     </TableCell>
                 )
@@ -41,10 +38,13 @@ export const UsersTableBody: FC<UserProps> = ({ user }) => (
         </TableRow>
     </TableBody>
 )
+
 interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
     handleGenderChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 
-}export const TableHeader: FC<TableHeaderProps> = ({ handleGenderChange }) => (
+}
+
+export const TableHeader: FC<TableHeaderProps | any> = ({ handleGenderChange, gender }) => (
     <TableHead sx={{ maxWidth: '100%' }}>
         <TableRow>
             {columns.map((column) => {
@@ -52,10 +52,11 @@ interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
                     <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ maxWidth: 1 / 1, padding: '0!important' }}
+                        sx={{ maxWidth: '100%', padding: '0!important' }}
                     >
                         <Select
-                            defaultValue='Gender'
+                            value={gender}
+                            autoWidth
                             inputProps={{ MenuProps: { disableScrollLock: true } }}
                             onChange={handleGenderChange}
                             sx={{ maxWidth: '100%', border: 'none' }}
@@ -63,8 +64,8 @@ interface TableHeaderProps extends HTMLAttributes<HTMLElement> {
                         >
                             <MenuItem value={Gender.female}> {Gender.female} </MenuItem>
                             <MenuItem value={Gender.male}> {Gender.male}  </MenuItem>
-                            <MenuItem hidden value="Gender">
-                                <em>Gender(ALL)</em>
+                            <MenuItem hidden value={'all'}>
+                                <em>All</em>
                             </MenuItem>
                         </Select>
                     </TableCell>

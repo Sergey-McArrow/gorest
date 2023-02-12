@@ -25,22 +25,23 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
     const methods = useForm<UserType>({ defaultValues })
     const { handleSubmit, reset, control, setValue, watch } = methods
     const onSubmit = async (newUser: UserType) => {
-        const updatedUser = await updateUser({ ...newUser, id: user.id })
+        const updatedUser = await updateUser({ ...newUser, id: user.id }, process.env.API_TOKEN || '')
         const { data } = updatedUser
         if (data instanceof Array) {
             const { field, message } = data[0]
             toast.error(`An error occurred. 
             Message: ${field} ${message} `)
         }
-        else toast.success('Data sent successfully!')
+        else {
+            toast.success('Data sent successfully!')
+            setTimeout(() => { router.back() }, 3000)
+        }
     }
 
     return (
         <>
             <Paper sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, minHeight: '100vh', minWidth: 1 / 1 }}>
-                <Stack alignItems='center' spacing={3} sx={{ width: 7 / 10 }}>
-
-
+                <Stack alignItems='center' spacing={3} sx={{ width: '70%' }}>
                     <Typography component='h1' variant='h6' align='center'>Edit user details and click <strong>SUBMIT</strong> button</Typography>
                     <FormProvider {...methods}>
                         <Stack
@@ -61,7 +62,7 @@ const UserInfo: NextPage<UserInfoProps> = ({ user }) => {
                             <Button type='reset' variant='contained' color='secondary' onClick={() => reset()}>
                                 Reset
                             </Button>
-                            <Button type='reset' variant='contained' color='info' onClick={() => router.back()}>
+                            <Button variant='contained' color='info' onClick={() => router.back()}>
                                 Go Back
                             </Button>
                         </Stack>

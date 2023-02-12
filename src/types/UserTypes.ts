@@ -41,3 +41,5 @@ export type getAllUsersInfoFromApiFnType = () => Promise<{
 	data: UserType[] | null
 	meta: MetaType
 }>
+
+export type GenderSelectType = Gender | 'all'
