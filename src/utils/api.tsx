@@ -32,7 +32,7 @@ export const getUserFromAPI = async (id: string) => {
 }
 
 export const updateUser = async (updatedData: UserType) => {
-    const API_KEY = process.env.API_TOKEN
+    const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN
     try {
         const response = await fetch('https://gorest.co.in/public/v1/users/' + updatedData.id, {
             method: 'PUT',
