@@ -8,7 +8,7 @@ import { Column } from '@/types/TableProps'
 
 type UserProps = { user: UserType }
 
-const columns: readonly Column[] = [
+export const columns: readonly Column[] = [
     { id: 'name', label: 'Name', minWidth: '30%' },
     { id: 'email', label: 'E Mail', minWidth: '30%', },
     { id: 'gender', label: 'Gender', minWidth: '20%', align: 'right' },
