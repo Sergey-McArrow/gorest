@@ -11,7 +11,6 @@ import { getAllUsersInfoFromApi } from '@/utils/api'
 type UsersProps = { initialUsersData: UserType[] | null, pagination: PaginationType | null }
 
 export const getServerSideProps = async (context: GetServerSidePropsContext<NextParsedUrlQuery>) => {
-    const page = context.params?.page as string
     const users = await getAllUsersInfoFromApi()
     return users ? {
         props: {
@@ -27,7 +26,7 @@ const Users: NextPage<UsersProps> = ({ initialUsersData, pagination }) => {
     const [gender, setGender] = useState<GenderSelectType>('all')
 
     const handleChangePage = useCallback((event: ChangeEvent<unknown>, newPage: number) => {
-        router.push(String(newPage))
+        router.push(('users/' + String(newPage)))
             .then(() => { setGender('all') })
     }, [])
 
