@@ -16,7 +16,7 @@ export default function Home() {
       </Head>
       <main >
         <Typography variant='h4' component='h1' textAlign='center' color='ThreeDLightShadow'>Here is the app for get & edit users data from FakeApi </Typography>
-        <Button variant='contained' color='info' onClick={() => router.push('/users/1')}>
+        <Button variant='contained' color='info' onClick={() => router.push('/users')}>
           Go to Users
         </Button>
       </main>
