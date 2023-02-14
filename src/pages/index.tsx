@@ -12,6 +12,7 @@ export default function Home() {
         <title>GoRest</title>
         <meta name="description" content="Fetching data from gorestAPI" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google-site-verification" content="odw3dKtpnluljCPThiY9P-UY93Y_PncM-mwLu7Zi628" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
