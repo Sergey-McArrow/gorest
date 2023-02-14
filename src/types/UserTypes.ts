@@ -5,6 +5,7 @@ export type UserType = {
 	gender: Gender
 	status: Status
 }
+export type UserForRenderingType = Omit<UserType, 'id'>
 
 export enum Gender {
 	male = 'male',

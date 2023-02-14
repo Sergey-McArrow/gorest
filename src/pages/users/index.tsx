@@ -28,7 +28,7 @@ const Users: NextPage<UsersProps> = ({ initialUsersData, pagination }) => {
     const handleChangePage = useCallback((event: ChangeEvent<unknown>, newPage: number) => {
         router.push(('users/' + String(newPage)))
             .then(() => { setGender('all') })
-    }, [])
+    }, [router])
 
     const usersByGender = useMemo(() => {
         if (!initialUsersData) return []

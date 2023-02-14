@@ -14,6 +14,7 @@ describe('Users page', () => {
         )
     })
     describe('Table renders correctly', () => {
+        const [user, ...rest] = initialUsersData
         it('correctly renders a table header', () => {
             const tableHeader = screen.getAllByRole('columnheader')
             expect(tableHeader).toHaveLength(columns.length)
@@ -28,7 +29,7 @@ describe('Users page', () => {
             const tableHeader = screen.getAllByRole('columnheader')
             tableHeader.forEach((el, index) => {
                 if (columns[index].label === 'Gender') {
-                    expect(el).toHaveTextContent('All') //TODO: think about improvement
+                    expect(el).toHaveTextContent('All')
                 } else
                     expect(el).toHaveTextContent(columns[index].label)
             })
@@ -36,19 +37,19 @@ describe('Users page', () => {
 
         it('correctly renders a table with assigned values', () => {
             const tableCell = screen.getByRole('cell', {
-                name: initialUsersData[0].name
+                name: user.name
             })
             expect(tableCell).toBeInTheDocument()
             const link = tableCell.firstChild
-            expect(link).toHaveTextContent(initialUsersData[0].name)
+            expect(link).toHaveTextContent(user.name)
         })
 
         it('link is working correctly', () => {
             const link = screen.getByRole('link', {
-                name: initialUsersData[0].name
+                name: user.name
             })
             fireEvent.click(link)
-            expect(mockRouter.asPath).toEqual(`/edit/${initialUsersData[0].id}`)
+            expect(mockRouter.asPath).toEqual(`/edit/${user.id}`)
         })
     })
     describe('Pagination renders and redirect correctly', () => {

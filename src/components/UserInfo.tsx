@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { FC, useCallback } from 'react'
 import { useRouter } from 'next/router'
 
 import { Stack, Button, Paper, Typography } from '@mui/material'
@@ -6,45 +6,37 @@ import { FormProvider, useForm } from "react-hook-form"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 
-import { Gender, Status, UserType } from '@/types/UserTypes'
+import { Gender, Status, UserForRenderingType, UserType } from '@/types/UserTypes'
 import { FormInputText } from '@/components/form/FormInputText'
 import { FormInputDropdown } from '@/components/form/FormInputDropdown'
 import { updateUser } from '@/utils/api'
 
 type UserInfoProps = { user: UserType }
 
-const UserInfo: FC<UserInfoProps> = ({ user }) => {
-    const defaultValues = {
-        name: user.name,
-        email: user.email,
-        gender: user.gender,
-        status: user.status
-    }
+const UserInfo: FC<UserInfoProps> = ({ user: { id, ...userForRender } }) => {
     const router = useRouter()
+    const methods = useForm<UserForRenderingType>({ defaultValues: userForRender })
 
-    const methods = useForm<UserType>({ defaultValues })
-    const { handleSubmit, reset, control, setValue, watch } = methods
-    const onSubmit = async (newUser: UserType) => {
-        const updatedUser = await updateUser({ ...newUser, id: user.id })
-        const { data } = updatedUser
+    const onSubmit = useCallback(async (payload: UserForRenderingType) => {
+        const { data: updatedUserResponse } = await updateUser({ ...payload, id })
 
-
-
-        if (data instanceof Array) {
-            const { field, message } = data[0]
+        if (Array.isArray(updatedUserResponse)) {
+            const [error] = updatedUserResponse
             toast.error(`An error occurred. 
-            Message: ${field} ${message} `)
+            Message: ${error.field} ${error.message} `)
         }
-        else if ('message' in data) {
-            const { message } = data
+        else if ('message' in updatedUserResponse) {
+            const { message } = updatedUserResponse
             toast.error(`An error occurred. 
-            Message:  ${message} `)
+            Message:  ${message}`)
         }
         else {
             toast.success('Data sent successfully!')
             setTimeout(() => { router.back() }, 3000)
         }
-    }
+    }, [router, id])
+
+    const handleGoBack = useCallback(() => router.back(), [router])
 
     return (
         <>
@@ -56,7 +48,7 @@ const UserInfo: FC<UserInfoProps> = ({ user }) => {
                             component='form'
                             direction={'column'}
                             spacing={3}
-                            onSubmit={handleSubmit(onSubmit)}>
+                            onSubmit={methods.handleSubmit(onSubmit)}>
                             <FormInputText name='name' label="Name" />
                             <FormInputText name='email' label="E Mail" />
                             <FormInputDropdown name='gender' label='Gender'
@@ -67,7 +59,7 @@ const UserInfo: FC<UserInfoProps> = ({ user }) => {
                                 <Button type='submit' variant='contained' color='success'>
                                     Submit
                                 </Button>
-                                <Button variant='outlined' color='inherit' onClick={() => router.back()}>
+                                <Button variant='outlined' color='inherit' onClick={handleGoBack}>
                                     Go Back
                                 </Button>
                             </Stack>

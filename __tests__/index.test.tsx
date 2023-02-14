@@ -26,7 +26,6 @@ describe('Home page', () => {
             name: /go to users/i
         })
         fireEvent.click(btn)
-        mockRouter.push('/users')
         expect(mockRouter).toMatchObject({ pathname: '/users' })
     })
 })
